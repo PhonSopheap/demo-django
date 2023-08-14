@@ -8,6 +8,9 @@ class StudentForm(serializers.Serializer):
     name = serializers.CharField()
     address = serializers.CharField()
 
+class TeacherForm(serializers.Serializer):
+    name = serializers.CharField()
+    address = serializers.CharField()
 
 class Student(APIView):
 
@@ -20,6 +23,29 @@ class Student(APIView):
     @swagger_auto_schema(request_body=StudentForm)
     def post(self, request):
         serializer = StudentForm(data=request.data)
+        if serializer.is_valid():
+            json = serializer.data
+            return Response({
+                'status': 200,
+                'date': json
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                'status': 400,
+                'date': "null"
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+class Teacher(APIView):
+
+    def get(self, request):
+        return Response({
+            'status': 200,
+            'message': 'Hello student'
+        }, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(request_body=TeacherForm)
+    def post(self, request):
+        serializer = TeacherForm(data=request.data)
         if serializer.is_valid():
             json = serializer.data
             return Response({
